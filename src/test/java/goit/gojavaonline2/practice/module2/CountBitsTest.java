@@ -9,12 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(Parameterized.class)
-public class AbcNumberTest {
-    private final String num;
-    private final int expected;
-    AbcNumber sut = new AbcNumber();
+public class CountBitsTest {
+    private final int num, expected;
+    CountBits sut = new CountBits();
 
-    public AbcNumberTest(String num, int expected) {
+    public CountBitsTest(int num, int expected) {
         this.num = num;
         this.expected = expected;
     }
@@ -23,14 +22,15 @@ public class AbcNumberTest {
     public static List<Object[]> data() {
 
         return Arrays.asList(
-            new Object[]{"bcd", 123},
-            new Object[]{"bfg", 156}
+           new Object[]{13, 3},
+           new Object[]{16, 1},
+           new Object[]{-2147483647, 2}
         );
     }
 
     @Test
-    public void testConvert() throws Exception {
-        int actual = sut.convert(num);
+    public void testCount() throws Exception {
+        int actual = sut.count(num);
         Assert.assertEquals(expected, actual);
     }
 }

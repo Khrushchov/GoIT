@@ -10,7 +10,7 @@ import java.util.List;
 
 @RunWith(Parameterized.class)
 public class AverageNumberTest {
-    int a, b, expected;
+    private final int a, b, expected;
     AverageNumber sut = new AverageNumber();
 
     public AverageNumberTest(int a, int b, int expected) {
