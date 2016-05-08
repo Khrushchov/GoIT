@@ -38,7 +38,6 @@ public class FindMaxNumberTest {
 
     @Test
     public void testMax() throws Exception {
-        int actual = sut.max(input);
-        Assert.assertEquals(expected, actual);
+        int actual = sut.max(input);Assert.assertEquals(expected, actual);
     }
 }
