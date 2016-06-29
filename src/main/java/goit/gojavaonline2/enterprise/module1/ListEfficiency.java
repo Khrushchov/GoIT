@@ -1,4 +1,4 @@
-package goit.gojavaonline2.enterprise;
+package goit.gojavaonline2.enterprise.module1;
 
 import java.util.*;
 
