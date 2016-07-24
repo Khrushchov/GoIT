@@ -4,25 +4,28 @@ import java.util.concurrent.*;
 
 public class SquareSumImpl implements SquareSum {
     private static final Phaser PHASER = new Phaser(1);
+    private int[] values;
 
-//    public static void main(String[] args) {
-//        SquareSumImpl squareSum = new SquareSumImpl();
-//        int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-//        System.out.println(squareSum.getSquareSum(values, 8));
-//    }
     @Override
-    public long getSquareSum(int[] values,  int numberOfThreads) {
+    public long getSquareSum(int[] values, int numberOfThreads) {
+        this.values = values;
         ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
         long results = 0;
-        Counter.initCounter(values, numberOfThreads);
-        for (int i = 1; i <= numberOfThreads ; i++) {
-            if (i == numberOfThreads){
-                Counter.destination = values.length;
+        int start = 0;
+        int part = values.length / numberOfThreads;
+        int finish = start + part;
+
+        for (int i = 1; i <= numberOfThreads; i++) {
+            if (i == numberOfThreads) {
+                finish = values.length;
             }
-            Future<Long> future = executor.submit(new Counter());
+            Future<Long> future = executor.submit(new Counter(start, finish));
+            start += part;
+            finish += part;
             try {
                 System.out.println(future.get());
                 results += future.get();
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
@@ -31,33 +34,19 @@ public class SquareSumImpl implements SquareSum {
         return results;
     }
 
-    public static class Counter implements Callable{
-        private static int departure;
-        private static int destination;
-        private static int[] values;
-        private static int part;
-
+    public class Counter implements Callable {
         private int start;
         private int finish;
 
-        public Counter() {
-            start = departure;
-            finish = destination;
-            departure += part;
-            destination += part;
+        public Counter(int start, int finish) {
+            this.start = start;
+            this.finish = finish;
         }
 
-      static void initCounter(int[] values, int numberOfThreads){
-            Counter.values = values;
-            departure = 0;
-            part = values.length/numberOfThreads;
-            destination = departure + part;
-            PHASER.register();
-        }
         @Override
         public Long call() throws Exception {
             long result = 0;
-            for (int i = start; i < finish  ; i++) {
+            for (int i = start; i < finish; i++) {
                 result += Math.pow(values[i], 2);
             }
             System.out.printf("Поток со стартовым индексом %d посчитал квадраты и передал " +
@@ -67,5 +56,4 @@ public class SquareSumImpl implements SquareSum {
             return result;
         }
     }
-
 }
