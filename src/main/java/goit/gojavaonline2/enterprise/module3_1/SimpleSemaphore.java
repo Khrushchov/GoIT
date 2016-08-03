@@ -43,7 +43,7 @@ public class SimpleSemaphore implements Semaphore {
     }
 
     @Override
-    public void release(int permits) {
+    public synchronized void release(int permits) {
         if (permits < 1){
             System.out.println("Error: permits should be > 0");
             return;
